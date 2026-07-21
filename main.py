@@ -16,6 +16,20 @@ def fetch_players(search_term):
         print(f"Request Failed: {response.status_code} , {response.text}")
         return None
     
+def fetch_games():
+    key = os.environ.get("BALLDONTLIE_KEY")
+    url = "https://api.balldontlie.io/v1/games"
+    headers = {"Authorization": key}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        games = data['data']
+        return games
+    else:
+        print(f"Request Failed: {response.status_code} , {response.text}")
+        return None
+    
 
 def save_players(players, filename):
     with open(filename, "w") as f:
@@ -29,12 +43,20 @@ def format_players(player):
     team_name = team.get("full_name", 'Unknown')
     return f"{first} {last} - {team_name}"
 
+def format_games(game):
+    date = game.get("date","Unknown")
+    visitor = game.get("visitor_team",{}).get("full_name","Unknown")
+    home = game.get("home_team", {}).get("full_name", "Unknown")
+    v_Score = game.get("visitor_team_score")
+    h_Score = game.get("home_team_score")
+    return f"{date}: {visitor} {v_Score} @ {home} {h_Score}"
+
 def main():
-    players = fetch_players("Curry")
-    if players:
-        for player in players:
-            print(format_players(player))
-        save_players(players, "players.json")
+    games = fetch_games()
+    if games:
+        for game in games:
+            print(format_games(game))
+        save_players(games, "games.json")
 
 if __name__ == "__main__":
     main()
