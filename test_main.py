@@ -1,5 +1,8 @@
 from main import format_players
 from main import format_games
+from main import game_winner
+from main import margin
+from main import is_blowout
 
 def test_format_players_basic():
     fake_player = {
@@ -46,3 +49,49 @@ def test_format_games_missing_team():
         "home_team_score": 98,
     }
     assert format_games(fake) == "2020-01-01: Lakers 100 @ Unknown 98"
+
+def test_game_winner_visitor():
+    game = {
+        "visitor_team": {"full_name": "Knicks"},
+        "home_team": {"full_name": "Huskies"},
+        "visitor_team_score": 24,
+        "home_team_score": 18
+    }
+    assert game_winner(game) == "Knicks"
+
+def test_game_winner_home():
+    game = {
+        "visitor_team": {"full_name": "Knicks"},
+        "home_team": {"full_name": "Huskies"},
+        "visitor_team_score": 10,
+        "home_team_score": 25
+    }
+    assert game_winner(game) == "Huskies"
+
+def test_game_margin():
+    game = {
+        "visitor_team": {"full_name": "Knicks"},
+        "home_team": {"full_name": "Huskies"},
+        "visitor_team_score": 24,
+        "home_team_score": 18
+    }
+    assert margin(game) == 6
+
+def test_game_is_blowout():
+    game = {
+        "visitor_team_score": 18,
+        "home_team_score": 50
+    }
+    assert is_blowout(game) == True
+
+def test_is_blowout_just_under():
+    game = {"visitor_team_score": 18, "home_team_score": 37}  
+    assert not is_blowout(game)
+
+def test_is_blowout_exactly_at_threshold():
+    game = {"visitor_team_score": 18, "home_team_score": 38}
+    assert is_blowout(game)
+
+def test_is_blowout_just_over():
+    game = {"visitor_team_score": 18, "home_team_score": 39}
+    assert is_blowout(game)
