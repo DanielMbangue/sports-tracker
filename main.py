@@ -74,6 +74,15 @@ def margin(game):
 def is_blowout(game, threshold=20):
     return margin(game) >= threshold
 
+def largest_margin(games):
+    if not games:
+        return None
+    bestGame = games[0]
+    for game in games:
+        if margin(game) > margin(bestGame):
+            bestGame = game
+    return bestGame
+
 def main():
     games = fetch_games()
     if games:

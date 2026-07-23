@@ -3,6 +3,7 @@ from main import format_games
 from main import game_winner
 from main import margin
 from main import is_blowout
+from main import largest_margin
 
 def test_format_players_basic():
     fake_player = {
@@ -95,3 +96,14 @@ def test_is_blowout_exactly_at_threshold():
 def test_is_blowout_just_over():
     game = {"visitor_team_score": 18, "home_team_score": 39}
     assert is_blowout(game)
+
+def test_largest_margin():
+    games = [
+        {"visitor_team_score": 100, "home_team_score": 98}, 
+        {"visitor_team_score": 100, "home_team_score": 70},
+        {"visitor_team_score": 100, "home_team_score": 95},
+    ]
+    assert largest_margin(games) == games[1]
+
+def test_largest_margin_empty():
+    assert largest_margin([]) is None
