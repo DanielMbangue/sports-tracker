@@ -4,6 +4,7 @@ from main import game_winner
 from main import margin
 from main import is_blowout
 from main import largest_margin
+from main import team_record
 
 def test_format_players_basic():
     fake_player = {
@@ -107,3 +108,16 @@ def test_largest_margin():
 
 def test_largest_margin_empty():
     assert largest_margin([]) is None
+
+def test_team_record():
+    games = [
+        {"visitor_team": {"full_name": "Knicks"}, "home_team": {"full_name": "Celtics"},
+         "visitor_team_score": 100, "home_team_score": 90},    # Knicks win (away)
+        {"visitor_team": {"full_name": "Celtics"}, "home_team": {"full_name": "Knicks"},
+         "visitor_team_score": 80, "home_team_score": 95},     # Knicks win (home)
+        {"visitor_team": {"full_name": "Knicks"}, "home_team": {"full_name": "Bulls"},
+         "visitor_team_score": 70, "home_team_score": 88},     # Knicks lose
+        {"visitor_team": {"full_name": "Lakers"}, "home_team": {"full_name": "Heat"},
+         "visitor_team_score": 100, "home_team_score": 99},    # no Knicks — must be skipped
+    ]
+    assert team_record(games, "Knicks") == (2, 1)

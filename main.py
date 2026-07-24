@@ -83,6 +83,21 @@ def largest_margin(games):
             bestGame = game
     return bestGame
 
+def team_record(games ,team_name):
+    wins = 0
+    losses = 0
+    for game in games:
+       visitor = game.get("visitor_team", {}).get("full_name", "Unknown")
+       home = game.get("home_team", {}).get("full_name", "Unknown")
+       winner = game_winner(game)
+       if team_name != visitor and team_name != home:
+           continue
+       if team_name == winner:
+           wins += 1
+       else:
+           losses += 1 
+    return (wins, losses)
+
 def main():
     games = fetch_games()
     if games:
