@@ -1,6 +1,10 @@
 import requests
 import os
 import json
+import argparse
+import logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
 def fetch_players(search_term):
     key = os.environ.get("BALLDONTLIE_KEY")
     url = "https://api.balldontlie.io/v1/players"
@@ -13,7 +17,7 @@ def fetch_players(search_term):
         players = data['data']
         return players
     else:
-        print(f"Request Failed: {response.status_code} , {response.text}")
+        logging.error(f"Request Failed: {response.status_code} , {response.text}")
         return None
     
 def fetch_games():
@@ -27,7 +31,7 @@ def fetch_games():
         games = data['data']
         return games
     else:
-        print(f"Request Failed: {response.status_code} , {response.text}")
+        logging.error(f"Request Failed: {response.status_code} , {response.text}")
         return None
     
 
@@ -99,11 +103,17 @@ def team_record(games ,team_name):
     return (wins, losses)
 
 def main():
-    games = fetch_games()
-    if games:
-        for game in games:
-            print(format_games(game))
-        save_players(games, "games.json")
+    parser = argparse.ArgumentParser(description="Fetch NBA data")
+    parser.add_argument("--search", default="Curry", help="Player name to search")
+    parser.add_argument("--output", default="players.json", help="Output file")
+    args = parser.parse_args()
+    logging.info(f"Fetching Players for search: {args.search}")
+
+    players = fetch_players(args.search)
+    if players:
+        for player in players:
+            print(format_players(player))
+        save_players(players, args.output)
 
 if __name__ == "__main__":
     main()
