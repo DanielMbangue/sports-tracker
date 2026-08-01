@@ -49,15 +49,13 @@ def format_players(player):
 
 def format_games(game):
     date = game.get("date","Unknown")
-    visitor = game.get("visitor_team",{}).get("full_name","Unknown")
-    home = game.get("home_team", {}).get("full_name", "Unknown")
+    visitor, home = team_names(game)
     v_Score = game.get("visitor_team_score")
     h_Score = game.get("home_team_score")
     return f"{date}: {visitor} {v_Score} @ {home} {h_Score}"
 
 def game_winner(game):
-    visitor = game.get("visitor_team", {}).get("full_name", "Unknown")
-    home = game.get("home_team", {}).get("full_name", "Unknown")
+    visitor, home = team_names(game)
     v_score = game.get("visitor_team_score")
     h_score = game.get("home_team_score")
     if v_score > h_score:
@@ -91,8 +89,7 @@ def team_record(games ,team_name):
     wins = 0
     losses = 0
     for game in games:
-       visitor = game.get("visitor_team", {}).get("full_name", "Unknown")
-       home = game.get("home_team", {}).get("full_name", "Unknown")
+       visitor, home = team_names(game)
        winner = game_winner(game)
        if team_name != visitor and team_name != home:
            continue
@@ -101,6 +98,29 @@ def team_record(games ,team_name):
        else:
            losses += 1 
     return (wins, losses)
+
+def team_names(game):
+    visitor = game.get("visitor_team", {}).get("full_name", "Unknown")
+    home = game.get("home_team", {}).get("full_name", "Unknown")
+    return visitor, home
+
+def count_wins(games, team_name):
+    wins, losses = team_record(games, team_name)
+    return wins
+
+def highest_scorer(games):
+    max_score = 0
+    if not games:
+            return "No game data was pulled"
+    for game in games:
+        v_score = game.get("visitor_team_score")
+        h_score = game.get("home_team_score")
+        
+        if v_score > max_score:
+            max_score = v_score
+        if h_score > max_score:
+            max_score = h_score
+    return max_score
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch NBA data")
