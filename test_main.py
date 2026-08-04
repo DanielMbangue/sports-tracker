@@ -6,6 +6,7 @@ from main import is_blowout
 from main import largest_margin
 from main import team_record
 from main import highest_scorer
+from main import count_high_scoring_games
 
 def test_format_players_basic():
     fake_player = {
@@ -130,3 +131,11 @@ def test_highest_scorer():
         {"visitor_team_score": 90, "home_team_score": 95},
     ]
     assert highest_scorer(games) == 120
+
+def test_count_high_scoring_games():
+    games = [
+        {"visitor_team_score": 100, "home_team_score": 105},  
+        {"visitor_team_score": 90, "home_team_score": 95},
+        {"visitor_team_score": 110, "home_team_score": 110},
+    ]
+    assert count_high_scoring_games(games, 200) == 2

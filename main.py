@@ -122,6 +122,17 @@ def highest_scorer(games):
             max_score = h_score
     return max_score
 
+def count_high_scoring_games(games, threshold):
+    count = 0
+    if not games:
+        return 0
+    for game in games:
+        v_Score = game.get("visitor_team_score", 0)
+        h_Score = game.get("home_team_score", 0)
+        if v_Score + h_Score > threshold:
+            count += 1
+    return count
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch NBA data")
     parser.add_argument("--search", default="Curry", help="Player name to search")
