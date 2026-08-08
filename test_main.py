@@ -7,6 +7,7 @@ from main import largest_margin
 from main import team_record
 from main import highest_scorer
 from main import count_high_scoring_games
+from main import average_margin
 
 def test_format_players_basic():
     fake_player = {
@@ -139,3 +140,13 @@ def test_count_high_scoring_games():
         {"visitor_team_score": 110, "home_team_score": 110},
     ]
     assert count_high_scoring_games(games, 200) == 2
+
+def test_average_margin():
+    games = [
+        {"visitor_team_score": 100, "home_team_score": 90},
+        {"visitor_team_score": 80, "home_team_score": 100},
+    ]
+    assert average_margin(games) == 15
+
+def test_average_margin_empty():
+    assert average_margin([]) == 0

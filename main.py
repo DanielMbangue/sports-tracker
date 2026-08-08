@@ -133,6 +133,19 @@ def count_high_scoring_games(games, threshold):
             count += 1
     return count
 
+def average_margin(games):
+    count = 0
+    total = 0
+    if not games:
+        return 0
+    for game in games:
+        v_Score = game.get("visitor_team_score", 0)
+        h_Score = game.get("home_team_score", 0)
+        margin = abs(v_Score - h_Score)
+        total = total + margin
+        count += 1
+    return total / count
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch NBA data")
     parser.add_argument("--search", default="Curry", help="Player name to search")
